@@ -1,23 +1,21 @@
-(function(){
+(function () {
 'use strict';
 
-angular.module('NameCalculator',[])
+angular.module('MsgApp', [])
+.controller('MsgController', MsgController);
 
-.controller('NameCalculatorController', function($scope){
-	$scope.name="";
-	$scope.totalValue=0;
-	$scope.displayNumeric = function(){
-		var totalNameValue = calculateNumericForString($scope.name);
-		$scope.totalValue = totalNameValue;
-	};
+MsgController.$inject = ['$scope'];
+function MsgController($scope) {
+  $scope.name = "Yaakov";
+  $scope.stateOfBeging = "hungry";
+  $scope.sayMessage = function() {
+    return "Yaakov likes to eat healthy snacks at night!";
+  }
 
-	function calculateNumericForString(string){
-		var totalStringValue=0;
-		for(var i=0; i<string.length; i++){
-			totalStringValue += string.charCodeAt(i);
-		}
-		return totalStringValue;
-	}
-});
+  $scope.feedYaakov = function() {
+    $scope.stateOfBeging = "fed";
+    return $scope.stateOfBeging;
+  }
+}
 
 })();
