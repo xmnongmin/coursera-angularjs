@@ -1,48 +1,45 @@
 (function () {
 'use strict';
 
-angular.module('MsgApp', [])
-.controller('MsgController', MsgController)
-.filter('loves', LovesFilter)
-.filter('truth', TruthFilter);
+angular.module('CounterApp', [])
+.controller('CounterController', CounterController);
 
-MsgController.$inject = ['$scope', 'lovesFilter'];
+CounterController.$inject = ['$scope'];
 
-function MsgController($scope, lovesFilter) {
+function CounterController($scope) {
+  $scope.onceCounter = 0;
+  $scope.counter = 0;
   $scope.name = "Yaakov";
-  $scope.stateOfBeing = "hungry";
-  $scope.cookieCost = .45
 
-  $scope.sayMessage = function () {
-  	var msg = "Yaakov likes to eat healthy snacks at night!";
-  	return msg;
+  $scope.showNumberOfWatchers = function () {
+    console.log("# of Wachers: " + JSON.stringify($scope.$$watchersCount));
   };
 
-  $scope.sayLovesMessage = function () {
-  	var msg = "Yaakov likes to eat healthy snacks at night!"
-    msg = lovesFilter(msg);
-    return msg;
+  $scope.countOnce = function(){
+    $scope.onceCounter = 1;
   };
 
-  $scope.feedYaakov = function () {
-    $scope.stateOfBeing = "fed";
-  };
-}
+  $scope.upCounter  = function(){
+    $scope.counter++;
+  }
 
-function LovesFilter(){
-	return function(input){
-		input = input || "";
-		input = input.replace("likes", "loves");
-		return input;
-	};
-}
+  // 4th Watcher
+  $scope.$watch(function(){ 
+    console.log("Digest loop fired!");
+  });
 
-function TruthFilter(){
-  return function(input, target, replace){
-    input = input || "";
-    input = input.replace(target, replace);
-    return input;
-  };
+  // $scope.$watch('onceCounter', function(newValue, oldValue){
+  //   console.log("old value: " + oldValue);
+  //   console.log("new value: " + newValue);
+  // });
+
+  // $scope.$watch('counter', function(newValue, oldValue){
+  //   console.log("old value: " + oldValue);
+  //   console.log("new value: " + newValue);
+  // });
+
+
+
 }
 
 })();
