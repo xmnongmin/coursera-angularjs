@@ -1,37 +1,28 @@
 (function () {
 'use strict';
 
-angular.module('CounterApp', [])
-.controller('CounterController', CounterController);
+angular.module('BindingApp', [])
+.controller('BindingController', BindingController);
 
-CounterController.$inject = ['$scope','$timeout'];
-function CounterController($scope,$timeout) {
-  $scope.counter = 0;
+BindingController.$inject = ['$scope'];
+function BindingController($scope) {
+  $scope.firstName = "Yaakov";
 
-  $scope.upCounter = function () {
-    $timeout(function(){
-       $scope.counter++;
-      console.log("Counter incremented!");
-    },2000);  
+  $scope.showNumberOfWatchers = function () {
+    console.log("# of Watchers: ", $scope.$$watchersCount);
   };
 
-  // $scope.upCounter = function () {
-  //   setTimeout(function () {
-  //     $scope.$apply(function () {
-  //       $scope.counter++;
-  //       console.log("Counter incremented!");
-  //     });
-  //   }, 2000);
-  // };
+  $scope.setFullName = function () {
+    $scope.fullName = $scope.firstName + " " + "Chaikin";
+  };
 
-  // $scope.upCounter = function () {
-  //   setTimeout(function () {
-  //     $scope.counter++;
-  //     console.log("Counter incremented!");
-  //     $scope.$digest();
-  //   }, 2000);
-  // };
-  
+  $scope.logFirstName = function () {
+    console.log("First name is: ", $scope.firstName);
+  };
+
+  $scope.logFullName = function () {
+    console.log("Full name is: ", $scope.fullName);
+  };
 }
 
 })();
