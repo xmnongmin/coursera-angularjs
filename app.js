@@ -1,47 +1,49 @@
 (function () {
 'use strict';
 
-angular.module('ControllerAsApp', [])
-// .controller('ParentController1', ParentController1)
-// .controller('ChildController1', ChildController1);
-.controller('ParentController2', ParentController2)
-.controller('ChildController2', ChildController2);
+angular.module('ShoppingListApp', [])
+.controller('ShoppingListAddController', ShoppingListAddController)
+.controller('ShoppingListShowController', ShoppingListShowController)
+.service('ShoppingListService', ShoppingListService);
 
-// ParentController1.$inject = ['$scope'];
-// function ParentController1($scope) {
-//   $scope.parentValue = 1;
-//   $scope.pc = this;
-//   $scope.pc.parentValue = 1;
-// }
+ShoppingListAddController.$inject = ['ShoppingListService'];
+function ShoppingListAddController(ShoppingListService) {
+  var itemAdder = this;
 
+  itemAdder.itemName = "";
+  itemAdder.itemQuantity = "";
 
-// ChildController1.$inject = ['$scope'];
-// function ChildController1($scope) {
-//   console.log("$scope.parentValue: ", $scope.parentValue);
-//   console.log("CHILD $scope: ", $scope);
-  //
-  // $scope.parentValue = 5;
-  // console.log("*** CHANGED: $scope.parentValue = 5 ***");
-  // console.log("$scope.parentValue: ", $scope.parentValue);
-  // console.log($scope);
-  //
-  // console.log("$scope.pc.parentValue: ", $scope.pc.parentValue);
-  // $scope.pc.parentValue = 5;
-  // console.log("** CHANGED: $scope.pc.parentValue = 5; ***");
-  // console.log("$scope.pc.parentValue: ", $scope.pc.parentValue);
-  // console.log("$scope: ", $scope);
-  //
-  // console.log("$scope.$parent.parentValue: ", $scope.$parent.parentValue);
-// }
-
-// ** Controller As syntax
-function ParentController2() {
-  this.value = 1;
+  itemAdder.addItem = function () {
+    ShoppingListService.addItem(itemAdder.itemName, itemAdder.itemQuantity);
+  }
 }
-ChildController2.$inject = ['$scope'];
-function ChildController2($scope) {
-  this.value = 5;
-  console.log("ChildController2 $scope: ", $scope);
+
+
+ShoppingListShowController.$inject = ['ShoppingListService'];
+function ShoppingListShowController(ShoppingListService) {
+  var showList = this;
+
+  showList.items = ShoppingListService.getItems();
+}
+
+
+function ShoppingListService() {
+  var service = this;
+
+  // List of shopping items
+  var items = [];
+
+  service.addItem = function (itemName, quantity) {
+    var item = {
+      name: itemName,
+      quantity: quantity
+    };
+    items.push(item);
+  };
+
+  service.getItems = function () {
+    return items;
+  };
 }
 
 })();
