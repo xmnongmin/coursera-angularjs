@@ -4,7 +4,7 @@
 angular.module('ShoppingListDirectiveApp', [])
 .controller('ShoppingListController', ShoppingListController)
 .factory('ShoppingListFactory', ShoppingListFactory)
-// .controller('ShoppingListDirectiveController', ShoppingListDirectiveController)
+.controller('ShoppingListDirectiveController', ShoppingListDirectiveController)
 .directive('shoppingList', ShoppingListDirective);
 
 
@@ -13,29 +13,28 @@ function ShoppingListDirective() {
     templateUrl: 'shoppingList.html',
     scope: {
       items: '<',
-      title: '@'
+      title: '@',
+      badRemove: '=',
+      onRemove: '&'
     },
-    // controller: 'ShoppingListDirectiveController as list',
-    controller: ShoppingListDirectiveController,
-    controllerAs: 'list',
+    controller: 'ShoppingListDirectiveController as list',
+    //controller: ShoppingListDirectiveController,
+    //controllerAs: 'list',
     bindToController: true
   };
 
   return ddo;
 }
 
-
-function ShoppingListDirectiveController() {
+function ShoppingListDirectiveController(){
   var list = this;
-
-  list.cookiesInList = function () {
-    for (var i = 0; i < list.items.length; i++) {
+  list.cookiesInList = function(){
+    for (var i = 0; i<list.items.length; i++) {
       var name = list.items[i].name;
-      if (name.toLowerCase().indexOf("cookie") !== -1) {
+      if(name.toLowerCase().indexOf("cookie")!==-1){
         return true;
       }
     }
-
     return false;
   };
 }
@@ -61,8 +60,10 @@ function ShoppingListController(ShoppingListFactory) {
   };
 
   list.removeItem = function (itemIndex) {
+    console.log("this is: ", this);
+    this.lastRemoved = "Last item removed was " +  this.items[itemIndex].name;
     shoppingList.removeItem(itemIndex);
-    list.title = origTitle + " (" + list.items.length + " items )";
+    this.title = origTitle + " (" + list.items.length + " items )";
   };
 }
 
