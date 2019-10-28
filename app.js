@@ -4,7 +4,6 @@
 angular.module('ShoppingListDirectiveApp', [])
 .controller('ShoppingListController', ShoppingListController)
 .factory('ShoppingListFactory', ShoppingListFactory)
-.controller('ShoppingListDirectiveController', ShoppingListDirectiveController)
 .directive('shoppingList', ShoppingListDirective);
 
 
@@ -13,28 +12,70 @@ function ShoppingListDirective() {
     templateUrl: 'shoppingList.html',
     scope: {
       items: '<',
-      title: '@',
-      badRemove: '=',
+      myTitle: '@title',
       onRemove: '&'
     },
-    controller: 'ShoppingListDirectiveController as list',
-    //controller: ShoppingListDirectiveController,
-    //controllerAs: 'list',
-    bindToController: true
+    controller: ShoppingListDirectiveController,
+    controllerAs: 'list',
+    bindToController: true,
+    link: ShoppingListDirectiveLink,
+    transclude: true
   };
 
   return ddo;
 }
 
-function ShoppingListDirectiveController(){
+
+function ShoppingListDirectiveLink(scope, element, attrs, controller) {
+  console.log("Link scope is: ", scope);
+  console.log("Controller instance is: ", controller);
+  console.log("Element is: ", element);
+
+  scope.$watch('list.cookiesInList()', function (newValue, oldValue) {
+    console.log("Old value: ", oldValue);
+    console.log("New value: ", newValue);
+
+    if (newValue === true) {
+      displayCookieWarning();
+    }
+    else {
+      removeCookieWarning();
+    }
+  });
+
+  function displayCookieWarning() {
+    // Using Angular jqLite
+    // var warningElem = element.find("div");
+    // warningElem.css('display', 'block');
+
+    // If jQuery included before Angular
+    var warningElem = element.find("div.error");
+    warningElem.slideDown(900);
+  }
+
+  function removeCookieWarning() {
+    // Using Angular jqLite
+    // var warningElem = element.find('div');
+    // warningElem.css('display', 'none');
+
+    // If jQuery included before Angular
+    var warningElem = element.find('div.error');
+    warningElem.slideUp(900);
+  }
+}
+
+
+function ShoppingListDirectiveController() {
   var list = this;
-  list.cookiesInList = function(){
-    for (var i = 0; i<list.items.length; i++) {
+
+  list.cookiesInList = function () {
+    for (var i = 0; i < list.items.length; i++) {
       var name = list.items[i].name;
-      if(name.toLowerCase().indexOf("cookie")!==-1){
+      if (name.toLowerCase().indexOf("cookie") !== -1) {
         return true;
       }
     }
+
     return false;
   };
 }
@@ -51,6 +92,8 @@ function ShoppingListController(ShoppingListFactory) {
   var origTitle = "Shopping List #1";
   list.title = origTitle + " (" + list.items.length + " items )";
 
+  list.warning = "COOKIES DETECTED!";
+
   list.itemName = "";
   list.itemQuantity = "";
 
@@ -60,8 +103,8 @@ function ShoppingListController(ShoppingListFactory) {
   };
 
   list.removeItem = function (itemIndex) {
-    console.log("this is: ", this);
-    this.lastRemoved = "Last item removed was " +  this.items[itemIndex].name;
+    console.log("'this' is: ", this);
+    this.lastRemoved = "Last item removed was " + this.items[itemIndex].name;
     shoppingList.removeItem(itemIndex);
     this.title = origTitle + " (" + list.items.length + " items )";
   };
